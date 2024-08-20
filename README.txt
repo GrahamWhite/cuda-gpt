@@ -16,7 +16,10 @@ activate
 
 
 3. Install dependancies
-	*Notes: Numpy must be of version 1.x.x as shown in command 2, and torch mush be installed with cuda support as shown in command 3
+	*Notes: 
+		Numpy must be of version 1.x.x as shown in command 2
+		Torch mush be installed with cuda support as shown in command 3
+		Ensure Nvidia CUDA drivers are updated otherwise this will run on the cpu (slower) not the gpu (faster)!!!
 
 	1: pip3 install numpy pylzma scikit-learn httpserver		
 	2: pip3 install numpy==1.26.4 
@@ -26,11 +29,10 @@ activate
 	python -m ipykernel install --user  --name=<project-name> --display-name <project-name>-gpt
 
 
-Note * other installations include http.server and scipypackage*(or something like that)
 
-Ensure Nvidia CUDA drivers are updated otherwise this will run on the cpu (slower) not the gpu (faster)!!!
-
-
+Commands:
+	Start Model Training: python gpt_v2.py
+	Start Http Server (localhost:8000): python -m http.server
 
 
 PROJECT

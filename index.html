@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training vs Validation Metrics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="lossChart"></canvas>
+    <canvas id="accuracyChart"></canvas>
+    <canvas id="f1ScoreChart"></canvas>
+    <script>
+        // Function to fetch and process data
+        async function fetchData() {
+            try {
+                const response = await fetch('report.json');
+                const data = await response.json();
+
+                // Extract data for each metric
+                const trainLoss = data.map(d => d.train.loss);
+                const valLoss = data.map(d => d.val.loss);
+
+                const trainAccuracy = data.map(d => d.train.accuracy);
+                const valAccuracy = data.map(d => d.val.accuracy);
+
+                const trainF1Score = data.map(d => d.train.f1_score);
+                const valF1Score = data.map(d => d.val.f1_score);
+
+                // Generate labels (e.g., Epochs)
+                const labels = Array.from({ length: data.length }, (_, i) => `Epoch ${i + 1}`);
+
+                // Function to calculate running average
+                function calculateRunningAverage(data, windowSize) {
+                    let runningAverage = [];
+                    let sum = 0;
+
+                    for (let i = 0; i < data.length; i++) {
+                        sum += data[i];
+                        if (i >= windowSize - 1) {
+                            if (i >= windowSize) {
+                                sum -= data[i - windowSize];
+                            }
+                            runningAverage.push(sum / windowSize);
+                        }
+                    }
+
+                    // Fill remaining values with NaN if there's not enough data for the window size
+                    while (runningAverage.length < data.length) {
+                        runningAverage.push(NaN);
+                    }
+
+                    return runningAverage;
+                }
+
+                // Calculate running averages with a window size of 100 (adjust as needed)
+                const windowSize = 1000;
+                const avgTrainLoss = calculateRunningAverage(trainLoss, windowSize);
+                const avgValLoss = calculateRunningAverage(valLoss, windowSize);
+
+                const avgTrainAccuracy = calculateRunningAverage(trainAccuracy, windowSize);
+                const avgValAccuracy = calculateRunningAverage(valAccuracy, windowSize);
+
+                const avgTrainF1Score = calculateRunningAverage(trainF1Score, windowSize);
+                const avgValF1Score = calculateRunningAverage(valF1Score, windowSize);
+
+                // Function to create a chart
+                function createChart(ctx, label, trainData, valData) {
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: `Train ${label} (Running Avg)`,
+                                    data: trainData,
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                    fill: false
+                                },
+                                {
+                                    label: `Validation ${label} (Running Avg)`,
+                                    data: valData,
+                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                    fill: false
+                                }
+                            ]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Create the charts
+                createChart(document.getElementById('lossChart').getContext('2d'), 'Loss', avgTrainLoss, avgValLoss);
+                createChart(document.getElementById('accuracyChart').getContext('2d'), 'Accuracy', avgTrainAccuracy, avgValAccuracy);
+                createChart(document.getElementById('f1ScoreChart').getContext('2d'), 'F1 Score', avgTrainF1Score, avgValF1Score);
+
+            } catch (error) {
+                console.error('Error loading the JSON data:', error);
+            }
+        }
+
+        // Call the fetchData function to load the data and create charts
+        fetchData();
+    </script>
+</body>
+</html>

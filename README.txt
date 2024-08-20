@@ -16,10 +16,9 @@ activate
 
 
 3. Install dependancies
-	*Notes: Numpy must be of version 1.x.x, and torch mush be installed with cuda support as shown in command 3
+	*Notes: Numpy must be of version 1.x.x as shown in command 2, and torch mush be installed with cuda support as shown in command 3
 
-	1: pip3 install numpy pylzma scikit-learn
-		
+	1: pip3 install numpy pylzma scikit-learn httpserver		
 	2: pip3 install numpy==1.26.4 
 	3: pip3 install --upgrade --force-reinstall torch --index-url https://download.pytorch.org/whl/cu118
 

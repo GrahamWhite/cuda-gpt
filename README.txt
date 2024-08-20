@@ -35,6 +35,18 @@ Commands:
 	Start Http Server (localhost:8000): python -m http.server
 
 
+STARTING THE HTTP SERVER
+1. Install dependancies
+	Node
+(Note a restart may be required to be able to access npm/npx from CMD on windows as the PATH needs to be updated)
+
+2. 
+cd control_panel
+npm install chart.js react-chartjs-2
+npm start dev
+	
+
+
 PROJECT
 Set Up Model
 

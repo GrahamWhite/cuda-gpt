@@ -16,7 +16,7 @@ activate
 
 
 3. Install dependancies
-	pip3 install matplotlib numpy pylzma ipykernel jupyter 
+	pip3 install matplotlib numpy pylzma ipykernel jupyter scikit-learn
 
 
 	pip3 install torch

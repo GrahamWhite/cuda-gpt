@@ -17,7 +17,8 @@ activate
 
 3. Install dependancies
 	pip3 install matplotlib numpy pylzma ipykernel jupyter scikit-learn torch
-	pip3 install torch --index-url https://download.pytorch.org/wh1/cu118 --upgrade --force-reinstall
+	pip3 install --upgrade --force-reinstall torch --index-url https://download.pytorch.org/whl/cu118
+
 	
 	python -m ipykernel install --user  --name=<project-name> --display-name <project-name>-gpt
 

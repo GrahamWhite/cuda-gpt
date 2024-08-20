@@ -16,10 +16,14 @@ activate
 
 
 3. Install dependancies
-	pip3 install matplotlib numpy pylzma ipykernel jupyter scikit-learn 
-	pip3 install --upgrade --force-reinstall torch --index-url https://download.pytorch.org/whl/cu118
+	*Notes: Numpy must be of version 1.x.x, and torch mush be installed with cuda support as shown in command 3
 
-	
+	1: pip3 install numpy pylzma scikit-learn
+		
+	2: pip3 install numpy==1.26.4 
+	3: pip3 install --upgrade --force-reinstall torch --index-url https://download.pytorch.org/whl/cu118
+
+	Optional: (
 	python -m ipykernel install --user  --name=<project-name> --display-name <project-name>-gpt
 
 

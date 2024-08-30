@@ -25,7 +25,7 @@ activate
 	2: pip3 install numpy==1.26.4 
 	3: pip3 install --upgrade --force-reinstall torch --index-url https://download.pytorch.org/whl/cu118
 
-	Optional: (
+	Optional: 
 	python -m ipykernel install --user  --name=<project-name> --display-name <project-name>-gpt
 
 
@@ -33,6 +33,7 @@ activate
 Commands:
 	Start Model Training: python gpt_v2.py
 	Start Http Server (localhost:8000): python -m http.server
+	Start Node: npx run dev
 
 
 STARTING THE HTTP SERVER

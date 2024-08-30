@@ -18,27 +18,27 @@ from sklearn.metrics import f1_score, accuracy_score
 from sklearn.preprocessing import MinMaxScaler
 
 # Set up the argument parser
-parser = argparse.ArgumentParser(description='Untrained GPT')
+parser = argparse.ArgumentParser(description='Proof of Concept GPT')
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 # Model and training parameters
 batch_size = 12
-block_size = 32
+block_size = 128
 
 
-max_iters = 100000
-print_progress_iters = 500
+max_iters = 1000
+eval_iters = 10
 
 learning_rate = 3e-4
-eval_iters = 1
+
 
 n_embd = 300
 n_head = 4
 n_layer = 4
 dropout = 0.2
 
-print(f"Model Training on Device: {device}")
+print(f"Model Loaded on Device: {device}")
 
 # Load the dataset
 dataset = load_dataset("yahma/alpaca-cleaned", trust_remote_code=True)
@@ -47,7 +47,7 @@ dataset = load_dataset("yahma/alpaca-cleaned", trust_remote_code=True)
 train_data = dataset['train']
 
 # Function to save metrics to JSON
-def save_metrics_to_json(metrics, filename='report.json'):
+def save_metrics_to_json(metrics, filename='gw-dashboard/public/report.json'):
     try:
         with open(filename, 'r') as f:
             report = json.load(f)  # Load existing data
@@ -336,22 +336,17 @@ metrics = estimate_loss()
 # Training loop
 for iter in range(max_iters):
    
-    if iter % print_progress_iters ==0:
+    if iter % eval_iters ==0:
         print(f"Step {iter}: Train loss {metrics['train']['loss']:.4f}, Val loss {metrics['val']['loss']:.4f}")
         print(f"Train Accuracy: {metrics['train']['accuracy']:.4f}, F1-score: {metrics['train']['f1_score']:.4f}")
         print(f"Val Accuracy: {metrics['val']['accuracy']:.4f}, F1-score: {metrics['val']['f1_score']:.4f}")
 
+        metrics = estimate_loss()
+        save_metrics_to_json(metrics)
+
         with open('model-01.pkl', 'wb') as f:
             pickle.dump(model, f)
             print("Model Saved Successfully")
-
-    if iter % eval_iters == 0:
-        metrics = estimate_loss()
-        save_metrics_to_json(metrics, 'report.json')
-
-        
-        
-       
 
     # Sample a batch of data
     xb, yb = get_batch('train')
@@ -370,5 +365,5 @@ prompt = ""
 while prompt != "exit":
     prompt = input("Prompt (type 'exit' to terminate program): ")
     context = torch.tensor(encode(prompt), dtype=torch.long, device=device)
-    generated_chars = decode(model.generate(context.unsqueeze(0), max_new_tokens=250)[0].tolist())
+    generated_chars = decode(model.generate(context.unsqueeze(0), max_new_tokens=100)[0].tolist())
     print(generated_chars)
